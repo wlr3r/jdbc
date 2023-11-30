@@ -7,7 +7,6 @@ public class jdbc {
  public static void main(String[] args) throws SQLException {
  Connection maConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/bdd_sak","root","");
  Scanner scanner = new Scanner(System.in);
-
  System.out.println("Choisir l'option");
  int operation = scanner.nextInt();
  scanner.nextLine(); 
@@ -24,6 +23,8 @@ public class jdbc {
   String mdp = scanner.nextLine();
   System.out.println("Votre age:");
   int age = scanner.nextInt();
+   scanner.close();
+
 
   PreparedStatement maRequete = maConnection.prepareStatement("INSERT INTO user (nom, prenom, email, mdp, age) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
    maRequete.setString(1,nom);
@@ -32,9 +33,9 @@ public class jdbc {
    maRequete.setString(4,mdp); 
    maRequete.setInt(5,age);
   maRequete.execute();
-   ResultSet userGenerer = maRequete.getGeneratedKeys();
-   if (userGenerer.next()) {
-    System.out.println("L'utilisateur a été inséré avec l'ID: " + userGenerer.getInt(1));
+   ResultSet Usercreer = maRequete.getGeneratedKeys();
+   if (Usercreer.next()) {
+    System.out.println("L'utilisateur a été inséré avec l'ID: " + Usercreer.getInt(1));
    }
    break;
    case 2:
@@ -50,10 +51,48 @@ public class jdbc {
        System.out.println("Email: " + resultSet.getString("email"));
        System.out.println("Mot de passe: " + resultSet.getString("mdp"));
        System.out.println("Age: " + resultSet.getInt("age"));
+        scanner.close();
+
    }
-   
+
    break;
   case 3:
+    PreparedStatement fetchAllUsersQuery = maConnection.prepareStatement("SELECT * FROM user");
+    ResultSet resultatSet = fetchAllUsersQuery.executeQuery();
+    while (resultatSet.next()){
+      System.out.println("User ID: " + resultatSet.getInt("id_user"));
+      System.out.println("Nom: " + resultatSet.getString("nom"));
+      System.out.println("Prenom: " + resultatSet.getString("prenom"));
+      System.out.println("Email: " + resultatSet.getString("email"));
+      System.out.println("Mot de passe: " + resultatSet.getString("mdp"));
+      System.out.println("Age: " + resultatSet.getInt("age"));
+       scanner.close();
+
+    }
+    break;
+    case 4:
+    System.out.println("Quelle utilisateur voulez vous modifier ? Entrer son id ");
+    int id = scanner.nextInt();
+    PreparedStatement fetchUserQueryCase4 = maConnection.prepareStatement("SELECT * FROM user WHERE id_user = ?");
+    fetchUserQueryCase4.setInt(1, id);
+    ResultSet resultSetCase4 = fetchUserQueryCase4.executeQuery();
+    if (resultSetCase4.next()){
+        System.out.println("User ID: " + resultSetCase4.getInt("id_user"));
+    }
+
+    System.out.println("Que voulez vous modifier ? \n nom, prenom, email, mdp, age ");
+    String fieldToModify = scanner.next();
+    System.out.println("Entrez la nouvelle valeur: ");
+    String nouvelValeur = scanner.next();
+
+    PreparedStatement updateUserQuery = maConnection.prepareStatement("UPDATE user SET " + fieldToModify + " = ? WHERE id_user = ?");
+    updateUserQuery.setString(1, nouvelValeur);
+    updateUserQuery.setInt(2, id);
+    updateUserQuery.executeUpdate();
+
+    System.out.println("L'utilisateur a été modifié avec succès.");
+    break;
+
 
  
 }
