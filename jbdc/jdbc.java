@@ -38,19 +38,24 @@ public class jdbc {
    }
    break;
    case 2:
-  System.out.println("Ecrire l'id");
-  int userId = scanner.nextInt();
-  PreparedStatement fetchUserQuery = maConnection.prepareStatement("SELECT * FROM user WHERE id_user = ?");
-  fetchUserQuery.setInt(1, userId);
-  ResultSet resultSet = fetchUserQuery.executeQuery();
-  while (resultSet.next()){
-    System.out.println("User ID: " + resultSet.getInt("id"));
-  }
-  break;
+   System.out.println("Ecrire l'id");
+   int userId = scanner.nextInt();
+   PreparedStatement fetchUserQuery = maConnection.prepareStatement("SELECT * FROM user WHERE id_user = ?");
+   fetchUserQuery.setInt(1, userId);
+   ResultSet resultSet = fetchUserQuery.executeQuery();
+   while (resultSet.next()){
+       System.out.println("User ID: " + resultSet.getInt("id_user"));
+       System.out.println("Nom: " + resultSet.getString("nom"));
+       System.out.println("Prenom: " + resultSet.getString("prenom"));
+       System.out.println("Email: " + resultSet.getString("email"));
+       System.out.println("Mot de passe: " + resultSet.getString("mdp"));
+       System.out.println("Age: " + resultSet.getInt("age"));
+   }
+   
+   break;
   case 3:
 
  
-
 }
 }
 }
