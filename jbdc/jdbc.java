@@ -12,7 +12,7 @@ public class jdbc {
  scanner.nextLine(); 
 
  switch(operation) {
-  case 1:
+  case 1: //CREEEN USE
   System.out.println("Nom:");
   String nom = scanner.nextLine();
   System.out.println("Prenom:");
