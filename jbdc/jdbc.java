@@ -39,7 +39,7 @@ public class jdbc {
    }
    break;
    case 2:
-   System.out.println("Ecrire l'id");
+   System.out.println("Ecrire l'id"); //avoir les donnés d'un user
    int userId = scanner.nextInt();
    PreparedStatement fetchUserQuery = maConnection.prepareStatement("SELECT * FROM user WHERE id_user = ?");
    fetchUserQuery.setInt(1, userId);
@@ -56,7 +56,7 @@ public class jdbc {
    }
 
    break;
-  case 3:
+  case 3: //même baille que la case2
     PreparedStatement fetchAllUsersQuery = maConnection.prepareStatement("SELECT * FROM user");
     ResultSet resultatSet = fetchAllUsersQuery.executeQuery();
     while (resultatSet.next()){
@@ -83,18 +83,33 @@ public class jdbc {
     System.out.println("Que voulez vous modifier ? \n nom, prenom, email, mdp, age ");
     String fieldToModify = scanner.next();
     System.out.println("Entrez la nouvelle valeur: ");
-    String nouvelValeur = scanner.next();
+    String newValue = scanner.next();
 
     PreparedStatement updateUserQuery = maConnection.prepareStatement("UPDATE user SET " + fieldToModify + " = ? WHERE id_user = ?");
-    updateUserQuery.setString(1, nouvelValeur);
+    updateUserQuery.setString(1, newValue);
     updateUserQuery.setInt(2, id);
     updateUserQuery.executeUpdate();
 
     System.out.println("L'utilisateur a été modifié avec succès.");
+
+    // voir les donner du nouveau user 
+    PreparedStatement fetchUpdatedUserQuery = maConnection.prepareStatement("SELECT * FROM user WHERE id_user = ?");
+    fetchUpdatedUserQuery.setInt(1, id);
+    ResultSet updatedUserResultSet = fetchUpdatedUserQuery.executeQuery();
+    while (updatedUserResultSet.next()){
+        System.out.println("User ID: " + updatedUserResultSet.getInt("id_user"));
+        System.out.println("Nom: " + updatedUserResultSet.getString("nom"));
+        System.out.println("Prenom: " + updatedUserResultSet.getString("prenom"));
+        System.out.println("Email: " + updatedUserResultSet.getString("email"));
+        System.out.println("Mot de passe: " + updatedUserResultSet.getString("mdp"));
+        System.out.println("Age: " + updatedUserResultSet.getInt("age"));
+    }
     break;
+ 
 
 
  
+
 }
 }
 }
